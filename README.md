@@ -1,6 +1,8 @@
 # PGLite Note 📝
 
-A modern, feature-rich note-taking application built with Next.js, PGLite (in-browser PostgreSQL), and the Yoopta rich text editor. Store your notes locally in the browser with full database capabilities and a powerful editing experience.
+A modern, feature-rich note-taking application built with Next.js, [PGLite](https://github.com/ept/pglite) (in-browser PostgreSQL), and the Yoopta rich text editor. Store your notes locally in the browser with full database capabilities and a powerful editing experience.
+
+![PGLite Note App Screenshot](docs/image.png)
 
 ## ✨ Features
 
@@ -36,7 +38,7 @@ A modern, feature-rich note-taking application built with Next.js, PGLite (in-br
 ## 🛠️ Tech Stack
 
 - **Frontend Framework**: Next.js 15 with React 19
-- **Database**: PGLite (in-browser PostgreSQL)
+- **Database**: [PGLite](https://github.com/ept/pglite) (in-browser PostgreSQL)
 - **Rich Text Editor**: Yoopta Editor with Slate.js
 - **Styling**: Tailwind CSS 4
 - **Language**: TypeScript
@@ -73,7 +75,7 @@ pglite-note/
 
 ## 🗄️ Database Schema
 
-The application uses a simple but effective database schema:
+The application uses [PGLite](https://github.com/ept/pglite) with a simple but effective database schema:
 
 ```sql
 CREATE TABLE notes (
@@ -99,8 +101,14 @@ The Yoopta editor is configured with a comprehensive set of plugins in `src/conf
 
 ### Database Configuration
 
-PGLite is configured to use IndexedDB for persistent storage:
+[PGLite](https://github.com/ept/pglite) is configured to use IndexedDB for persistent storage:
 
 ```typescript
 export const db = new PGlite("idb://my-pgdata");
 ```
+
+PGLite provides a full PostgreSQL-compatible database that runs entirely in the browser, offering:
+- Full SQL support with PostgreSQL syntax
+- ACID transactions
+- Persistent storage using IndexedDB
+- No server setup required
