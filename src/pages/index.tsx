@@ -25,6 +25,8 @@ export default function Editor() {
   const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
   const [notes, setNotes] = useState<Note[]>([]);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editingTitle, setEditingTitle] = useState("");
 
   const handleNoteSelect = (noteId: number) => {
     setSelectedNoteId(noteId);
@@ -51,6 +53,49 @@ export default function Editor() {
         },
         selectedNoteId
       );
+    }
+  };
+
+  const handleTitleSave = async () => {
+    if (selectedNote && selectedNoteId !== null && editingTitle.trim() !== "") {
+      const updatedNote = {
+        ...selectedNote,
+        title: editingTitle.trim(),
+      };
+      
+      await Database.updateNote(updatedNote, selectedNoteId);
+      setSelectedNote(updatedNote);
+      
+      // Update the notes array
+      setNotes(prevNotes => 
+        prevNotes.map(note => 
+          note.id === selectedNoteId 
+            ? { ...note, title: editingTitle.trim() }
+            : note
+        )
+      );
+      
+      setIsEditingTitle(false);
+    }
+  };
+
+  const handleTitleEdit = () => {
+    if (selectedNote) {
+      setEditingTitle(selectedNote.title);
+      setIsEditingTitle(true);
+    }
+  };
+
+  const handleTitleCancel = () => {
+    setIsEditingTitle(false);
+    setEditingTitle("");
+  };
+
+  const handleTitleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleTitleSave();
+    } else if (e.key === "Escape") {
+      handleTitleCancel();
     }
   };
 
@@ -113,9 +158,49 @@ export default function Editor() {
         <div className="bg-white border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-medium text-gray-900">
-                {selectedNote?.title}
-              </h2>
+              {isEditingTitle ? (
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    value={editingTitle}
+                    onChange={(e) => setEditingTitle(e.target.value)}
+                    onKeyDown={handleTitleKeyDown}
+                    className="text-lg font-medium text-gray-900 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    autoFocus
+                  />
+                  <button
+                    onClick={handleTitleSave}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={handleTitleCancel}
+                    className="text-sm text-gray-500 hover:text-gray-700 font-medium"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <h2 
+                    className="text-lg font-medium text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+                    onClick={handleTitleEdit}
+                    title="Click to edit title"
+                  >
+                    {selectedNote?.title}
+                  </h2>
+                  <button
+                    onClick={handleTitleEdit}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    title="Edit title"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                </div>
+              )}
               <p className="text-sm text-gray-500 mt-1">Last edited today</p>
             </div>
             <div className="flex items-center space-x-2">
