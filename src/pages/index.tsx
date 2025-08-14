@@ -119,17 +119,11 @@ export default function Editor() {
               <p className="text-sm text-gray-500 mt-1">Last edited today</p>
             </div>
             <div className="flex items-center space-x-2">
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                Share
-              </button>
               <button
                 className="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
                 onClick={handleSave}
               >
                 Save
-              </button>
-              <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                Export
               </button>
             </div>
           </div>
