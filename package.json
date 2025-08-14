@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.3.7",
     "@yoopta/accordion": "^4.9.9",
     "@yoopta/action-menu-list": "^4.9.9",
     "@yoopta/blockquote": "^4.9.9",
