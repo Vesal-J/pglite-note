@@ -145,8 +145,13 @@ const TOOLS = {
 
 const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight];
 
-function WithBaseFullSetup() {
-  const [value, setValue] = useState<YooptaContentValue>();
+function WithBaseFullSetup({
+  value,
+  setValue,
+}: {
+  value: YooptaContentValue;
+  setValue: (value: YooptaContentValue) => void;
+}) {
   const editor = useMemo(() => createYooptaEditor(), []);
   const selectionRef = useRef(null);
 
@@ -154,6 +159,7 @@ function WithBaseFullSetup() {
     newValue: YooptaContentValue,
     options: YooptaOnChangeOptions
   ) => {
+    console.log("newValue", newValue);
     setValue(newValue);
   };
 

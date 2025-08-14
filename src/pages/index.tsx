@@ -1,27 +1,13 @@
-import YooptaEditor, { createYooptaEditor } from "@yoopta/editor";
-import { useState, useMemo } from "react";
-import { YooptaContentValue, YooptaOnChangeOptions } from "@yoopta/editor";
-import { allPlugins, Headings, Paragraph } from "../config/plugins";
+import { useState } from "react";
+import { YooptaContentValue } from "@yoopta/editor";
 import Sidebar from "../components/Sidebar";
-import { HeadingOne } from "@yoopta/headings";
-import Blockquote from "@yoopta/blockquote";
-import Code from "@yoopta/code";
-import { BulletedList, NumberedList } from "@yoopta/lists";
 import ActionMenuList from "@yoopta/action-menu-list";
 import LinkTool from "@yoopta/link-tool";
 import WithBaseFullSetup from "@/components/FullSetupEditor";
 
 export default function Editor() {
-  const editor = useMemo(() => createYooptaEditor(), []);
   const [value, setValue] = useState<YooptaContentValue>();
   const [selectedNoteId, setSelectedNoteId] = useState<string>("1");
-
-  const onChange = (
-    value: YooptaContentValue,
-    options: YooptaOnChangeOptions
-  ) => {
-    setValue(value);
-  };
 
   const handleNoteSelect = (noteId: string) => {
     setSelectedNoteId(noteId);
@@ -74,7 +60,7 @@ export default function Editor() {
         {/* Editor */}
         <div className="flex-1 p-6">
           <div className="max-w-4xl mx-auto">
-            <WithBaseFullSetup />
+            <WithBaseFullSetup value={value || {}} setValue={setValue} />
           </div>
         </div>
       </div>
