@@ -159,7 +159,6 @@ function WithBaseFullSetup({
     newValue: YooptaContentValue,
     options: YooptaOnChangeOptions
   ) => {
-    console.log("newValue", newValue);
     setValue(newValue);
   };
 
