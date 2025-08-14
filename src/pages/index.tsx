@@ -1,115 +1,83 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import YooptaEditor, { createYooptaEditor } from "@yoopta/editor";
+import { useState, useMemo } from "react";
+import { YooptaContentValue, YooptaOnChangeOptions } from "@yoopta/editor";
+import { allPlugins, Headings, Paragraph } from "../config/plugins";
+import Sidebar from "../components/Sidebar";
+import { HeadingOne } from "@yoopta/headings";
+import Blockquote from "@yoopta/blockquote";
+import Code from "@yoopta/code";
+import { BulletedList, NumberedList } from "@yoopta/lists";
+import ActionMenuList from "@yoopta/action-menu-list";
+import LinkTool from "@yoopta/link-tool";
+import WithBaseFullSetup from "@/components/FullSetupEditor";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export default function Editor() {
+  const editor = useMemo(() => createYooptaEditor(), []);
+  const [value, setValue] = useState<YooptaContentValue>();
+  const [selectedNoteId, setSelectedNoteId] = useState<string>("1");
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  const onChange = (
+    value: YooptaContentValue,
+    options: YooptaOnChangeOptions
+  ) => {
+    setValue(value);
+  };
 
-export default function Home() {
+  const handleNoteSelect = (noteId: string) => {
+    setSelectedNoteId(noteId);
+    // Here you would typically load the note content
+    console.log("Selected note:", noteId);
+  };
+
+  const tools = {
+    actionMenuList: ActionMenuList,
+    linkTool: LinkTool,
+  };
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar
+        onNoteSelect={handleNoteSelect}
+        selectedNoteId={selectedNoteId}
+      />
+
+      {/* Main Editor Area */}
+      <div className="flex-1 flex flex-col">
+        {/* Editor Header */}
+        <div className="bg-white border-b border-gray-200 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-medium text-gray-900">
+                {selectedNoteId === "1" && "Welcome to PGLite Notes"}
+                {selectedNoteId === "2" && "Meeting Notes - Q1 Planning"}
+                {selectedNoteId === "3" && "Project Ideas"}
+                {selectedNoteId === "4" && "Daily Journal"}
+                {selectedNoteId === "5" && "Reading List"}
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">Last edited today</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                Share
+              </button>
+              <button className="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                Save
+              </button>
+              <button className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                Export
+              </button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Editor */}
+        <div className="flex-1 p-6">
+          <div className="max-w-4xl mx-auto">
+            <WithBaseFullSetup />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
