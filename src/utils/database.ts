@@ -5,7 +5,7 @@ export const db = new PGlite("idb://my-pgdata");
 
 export class Database {
   static async getNotes(): Promise<Note[]> {
-    const notes = await db.exec("SELECT * FROM notes");
+    const notes = await db.exec("SELECT * FROM notes ORDER BY id DESC");
     return notes[0].rows as Note[];
   }
 

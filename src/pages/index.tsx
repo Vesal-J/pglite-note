@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import WithBaseFullSetup from "@/components/FullSetupEditor";
 import { Database } from "@/utils/database";
 import { Note } from "@/types/db";
-import { generateContent, getContentPreview } from "@/utils/editor";
+import { generateContent } from "@/utils/editor";
 
 const parseNoteContent = (content: string): YooptaContentValue => {
   if (!content || content.trim() === "") {
@@ -22,7 +22,7 @@ const parseNoteContent = (content: string): YooptaContentValue => {
 
 export default function Editor() {
   const [value, setValue] = useState<YooptaContentValue>();
-  const [selectedNoteId, setSelectedNoteId] = useState<number>(1);
+  const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
   const [notes, setNotes] = useState<Note[]>([]);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
@@ -43,7 +43,7 @@ export default function Editor() {
   };
 
   const handleSave = () => {
-    if (selectedNote) {
+    if (selectedNote && selectedNoteId !== null) {
       Database.updateNote(
         {
           title: selectedNote.title,
@@ -69,18 +69,22 @@ export default function Editor() {
     try {
       const notes = await Database.getNotes();
       setNotes(notes);
+      console.table(notes);
 
       if (notes.length > 0) {
-        setSelectedNote(notes[0]);
+        const firstNote = notes[0];
+        setSelectedNote(firstNote);
+        setSelectedNoteId(firstNote.id); // Set the correct selectedNoteId
 
-        if (notes[0]?.content) {
-          const parsedContent = parseNoteContent(notes[0].content);
+        if (firstNote?.content) {
+          const parsedContent = parseNoteContent(firstNote.content);
           setValue(parsedContent);
         } else {
           setValue({});
         }
       } else {
         setSelectedNote(null);
+        setSelectedNoteId(null);
         setValue({});
       }
     } catch (error) {
@@ -98,7 +102,7 @@ export default function Editor() {
       {/* Sidebar */}
       <Sidebar
         onNoteSelect={handleNoteSelect}
-        selectedNoteId={selectedNoteId}
+        selectedNoteId={selectedNoteId || undefined}
         notes={notes}
         addNewNote={addNewNote}
       />
@@ -134,9 +138,9 @@ export default function Editor() {
         {/* Editor */}
         <div className="flex-1 p-6">
           <div className="max-w-4xl mx-auto">
-            {value && (
+            {value && selectedNoteId !== null && (
               <WithBaseFullSetup
-                key={selectedNoteId}
+                key={`note-${selectedNoteId}`}
                 value={value}
                 setValue={setValue}
               />
