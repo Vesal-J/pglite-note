@@ -110,9 +110,9 @@ export default function Sidebar({
               <div
                 key={note.id}
                 onClick={() => onNoteSelect(note.id)}
-                className={`p-3 rounded-lg cursor-pointer transition-all hover:bg-gray-50 ${
+                className={`p-3 my-2 rounded-lg cursor-pointer transition-all hover:bg-gray-50 ${
                   selectedNoteId === note.id
-                    ? "bg-blue-50 border border-blue-200"
+                    ? "bg-blue-50 "
                     : ""
                 }`}
               >
