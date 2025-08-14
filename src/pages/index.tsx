@@ -56,6 +56,36 @@ export default function Editor() {
     }
   };
 
+  const handleDelete = async () => {
+    if (selectedNote && selectedNoteId !== null) {
+      const isConfirmed = window.confirm(
+        `Are you sure you want to delete "${selectedNote.title}"? This action cannot be undone.`
+      );
+      
+      if (isConfirmed) {
+        try {
+          await Database.deleteNote(selectedNoteId);
+          
+          setNotes((prevNotes) => prevNotes.filter((note) => note.id !== selectedNoteId));
+          
+          if (notes.length > 1) {
+            const remainingNotes = notes.filter((note) => note.id !== selectedNoteId);
+            if (remainingNotes.length > 0) {
+              handleNoteSelect(remainingNotes[0].id);
+            }
+          } else {
+            setSelectedNote(null);
+            setSelectedNoteId(null);
+            setValue({});
+          }
+        } catch (error) {
+          console.error("Error deleting note:", error);
+          alert("Failed to delete note. Please try again.");
+        }
+      }
+    }
+  };
+
   const handleTitleSave = async () => {
     if (selectedNote && selectedNoteId !== null && editingTitle.trim() !== "") {
       const updatedNote = {
@@ -240,12 +270,20 @@ export default function Editor() {
             </div>
             <div className="flex items-center space-x-2">
               {!isLoading && (
-                <button
-                  className="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                  onClick={handleSave}
-                >
-                  Save
-                </button>
+                <>
+                  <button
+                    className="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                    onClick={handleSave}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="px-3 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </button>
+                </>
               )}
             </div>
           </div>
