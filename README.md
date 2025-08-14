@@ -1,6 +1,6 @@
 # PGLite Note 📝
 
-A modern, feature-rich note-taking application built with Next.js, [PGLite](https://github.com/ept/pglite) (in-browser PostgreSQL), and the Yoopta rich text editor. Store your notes locally in the browser with full database capabilities and a powerful editing experience.
+A modern, feature-rich note-taking application built with Next.js, [PGLite](https://pglite.dev/) (in-browser PostgreSQL), and the Yoopta rich text editor. Store your notes locally in the browser with full database capabilities and a powerful editing experience.
 
 ![PGLite Note App Screenshot](docs/image.png)
 
