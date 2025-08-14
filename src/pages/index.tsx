@@ -36,17 +36,13 @@ export default function Editor() {
       if (selectedNote.content) {
         const parsedContent = parseNoteContent(selectedNote.content);
         setValue(parsedContent);
-        console.log(getContentPreview(parsedContent));
       } else {
         setValue({});
       }
     }
-
-    console.log("Selected note:", noteId);
   };
 
   const handleSave = () => {
-    console.log("Saving note:", value);
     if (selectedNote) {
       Database.updateNote(
         {
@@ -55,7 +51,6 @@ export default function Editor() {
         },
         selectedNoteId
       );
-      console.log(selectedNoteId);
     }
   };
 
@@ -63,7 +58,6 @@ export default function Editor() {
     const loadNotes = async () => {
       try {
         const notes = await Database.getNotes();
-        console.table(notes);
         setNotes(notes);
 
         if (notes.length > 0) {
@@ -127,7 +121,13 @@ export default function Editor() {
         {/* Editor */}
         <div className="flex-1 p-6">
           <div className="max-w-4xl mx-auto">
-            <WithBaseFullSetup value={value || {}} setValue={setValue} />
+            {value && (
+              <WithBaseFullSetup
+                key={selectedNoteId}
+                value={value}
+                setValue={setValue}
+              />
+            )}
           </div>
         </div>
       </div>
