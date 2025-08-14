@@ -22,14 +22,18 @@ export class Database {
   }
 
   static async createNote(note: Omit<Note, 'created_at' | 'updated_at'>) {
+    const escapedTitle = note.title.replace(/'/g, "''");
+    const escapedContent = note.content.replace(/'/g, "''");
     await db.exec(
-      `INSERT INTO notes (id, title, content) VALUES (${note.id}, '${note.title}', '${note.content}')`
+      `INSERT INTO notes (id, title, content) VALUES (${note.id}, '${escapedTitle}', '${escapedContent}')`
     );
   }
 
   static async updateNote(note: Pick<Note, 'title' | 'content'>, noteId: number) {
+    const escapedTitle = note.title.replace(/'/g, "''");
+    const escapedContent = note.content.replace(/'/g, "''");
     await db.exec(
-      `UPDATE notes SET title = '${note.title}', content = '${note.content}', updated_at = CURRENT_TIMESTAMP WHERE id = ${noteId} RETURNING *`
+      `UPDATE notes SET title = '${escapedTitle}', content = '${escapedContent}', updated_at = CURRENT_TIMESTAMP WHERE id = ${noteId} RETURNING *`
     );
   }
 
