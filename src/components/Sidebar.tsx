@@ -7,6 +7,7 @@ interface SidebarProps {
   selectedNoteId?: number;
   notes: Note[];
   addNewNote: () => void;
+  isLoading: boolean;
 }
 
 export default function Sidebar({
@@ -14,6 +15,7 @@ export default function Sidebar({
   selectedNoteId,
   notes,
   addNewNote,
+  isLoading,
 }: SidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -87,7 +89,22 @@ export default function Sidebar({
 
       {/* Notes List */}
       <div className="flex-1 overflow-y-auto">
-        {filteredNotes.length === 0 ? (
+        {isLoading ? (
+          <div className="p-2">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="p-3 my-2 rounded-lg">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-16 ml-2"></div>
+                </div>
+                <div className="space-y-1">
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-full"></div>
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-5/6"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredNotes.length === 0 ? (
           <div className="p-4 text-center text-gray-500">
             <svg
               className="w-12 h-12 mx-auto mb-2 text-gray-300"
@@ -148,7 +165,11 @@ export default function Sidebar({
       {/* Footer */}
       <div className="p-4 border-t border-gray-200">
         <div className="text-xs text-gray-500 text-center">
-          {filteredNotes.length} note{filteredNotes.length !== 1 ? "s" : ""}
+          {isLoading ? (
+            <div className="h-3 bg-gray-200 rounded animate-pulse w-20 mx-auto"></div>
+          ) : (
+            `${filteredNotes.length} note${filteredNotes.length !== 1 ? "s" : ""}`
+          )}
         </div>
       </div>
     </div>
