@@ -33,5 +33,5 @@ export function generateContent(content: string) {
 
 export function getContentPreview(content: YooptaContentValue) {
   // @ts-ignore
-  return content[Object.keys(content)[0]].value[0].children[0].text;
+  return content[Object.keys(content)[0]]?.value[0]?.children[0]?.text || "new note";
 }

@@ -54,30 +54,42 @@ export default function Editor() {
     }
   };
 
-  useEffect(() => {
-    const loadNotes = async () => {
-      try {
-        const notes = await Database.getNotes();
-        setNotes(notes);
+  const addNewNote = async () => {
+    const newNote = {
+      id: notes.length + 1,
+      title: "New Note",
+      content: JSON.stringify({}),
+    };
 
-        if (notes.length > 0) {
-          setSelectedNote(notes[0]);
+    await Database.createNote(newNote);
+    loadNotes();
+  };
 
-          if (notes[0]?.content) {
-            const parsedContent = parseNoteContent(notes[0].content);
-            setValue(parsedContent);
-          } else {
-            setValue({});
-          }
+  const loadNotes = async () => {
+    try {
+      const notes = await Database.getNotes();
+      setNotes(notes);
+
+      if (notes.length > 0) {
+        setSelectedNote(notes[0]);
+
+        if (notes[0]?.content) {
+          const parsedContent = parseNoteContent(notes[0].content);
+          setValue(parsedContent);
         } else {
-          setSelectedNote(null);
           setValue({});
         }
-      } catch (error) {
-        console.error("Error loading notes:", error);
+      } else {
+        setSelectedNote(null);
         setValue({});
       }
-    };
+    } catch (error) {
+      console.error("Error loading notes:", error);
+      setValue({});
+    }
+  };
+
+  useEffect(() => {
     loadNotes();
   }, []);
 
@@ -88,6 +100,7 @@ export default function Editor() {
         onNoteSelect={handleNoteSelect}
         selectedNoteId={selectedNoteId}
         notes={notes}
+        addNewNote={addNewNote}
       />
 
       {/* Main Editor Area */}
