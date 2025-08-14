@@ -1,40 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# PGLite Note 📝
 
-## Getting Started
+A modern, feature-rich note-taking application built with Next.js, PGLite (in-browser PostgreSQL), and the Yoopta rich text editor. Store your notes locally in the browser with full database capabilities and a powerful editing experience.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Rich Text Editor**: Powered by Yoopta editor with support for:
+  - Headings, paragraphs, and text formatting
+  - Lists (bulleted, numbered, and todo)
+  - Blockquotes and callouts
+  - Code blocks with syntax highlighting
+  - Tables and dividers
+  - Images, videos, and file attachments
+  - Links and embeds
+  - Accordion collapsible sections
+  - Bold, italic, underline, strikethrough, and highlight text
+
+- **Local Database**: Uses PGLite for in-browser PostgreSQL database
+  - No server required - everything runs locally
+  - Persistent storage across browser sessions
+  - Full SQL capabilities
+
+- **Modern UI**: Clean, responsive interface built with:
+  - Next.js 15 with React 19
+  - Tailwind CSS for styling
+  - TypeScript for type safety
+  - Responsive design for all devices
+
+- **Note Management**:
+  - Create, edit, and delete notes
+  - Inline title editing
+  - Auto-save functionality
+  - Sidebar navigation
+  - Loading states and error handling
+
+## 🛠️ Tech Stack
+
+- **Frontend Framework**: Next.js 15 with React 19
+- **Database**: PGLite (in-browser PostgreSQL)
+- **Rich Text Editor**: Yoopta Editor with Slate.js
+- **Styling**: Tailwind CSS 4
+- **Language**: TypeScript
+- **Package Manager**: Bun (recommended), npm, or pnpm
+- **Build Tool**: Next.js with Turbopack
+
+## 📁 Project Structure
+
+```
+pglite-note/
+├── src/
+│   ├── components/          # React components
+│   │   ├── FullSetupEditor.tsx  # Rich text editor setup
+│   │   └── Sidebar.tsx          # Note navigation sidebar
+│   ├── config/              # Configuration files
+│   │   ├── initValue.ts     # Editor initial values
+│   │   └── plugins.ts       # Yoopta editor plugins
+│   ├── pages/               # Next.js pages
+│   │   ├── _app.tsx         # App wrapper
+│   │   ├── _document.tsx    # Document wrapper
+│   │   └── index.tsx        # Main editor page
+│   ├── services/            # Service layer
+│   ├── styles/              # Global styles
+│   ├── types/               # TypeScript type definitions
+│   │   ├── db.ts            # Database types
+│   │   └── note.ts          # Note interface
+│   └── utils/               # Utility functions
+│       ├── database.ts      # Database operations
+│       └── editor.ts        # Editor utilities
+├── public/                  # Static assets
+├── package.json             # Dependencies and scripts
+└── README.md               # This file
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🗄️ Database Schema
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+The application uses a simple but effective database schema:
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```sql
+CREATE TABLE notes (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  content TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## 🔧 Configuration
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Editor Plugins
 
-## Learn More
+The Yoopta editor is configured with a comprehensive set of plugins in `src/config/plugins.ts`:
 
-To learn more about Next.js, take a look at the following resources:
+- **Text Elements**: Paragraphs, headings, blockquotes
+- **Lists**: Bulleted, numbered, and todo lists
+- **Media**: Images, videos, file attachments
+- **Interactive**: Tables, accordions, callouts
+- **Formatting**: Bold, italic, underline, code, links
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+### Database Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+PGLite is configured to use IndexedDB for persistent storage:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+```typescript
+export const db = new PGlite("idb://my-pgdata");
+```
