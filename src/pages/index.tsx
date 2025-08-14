@@ -63,19 +63,19 @@ export default function Editor() {
         ...selectedNote,
         title: editingTitle.trim(),
       };
-      
+
       await Database.updateNote(updatedNote, selectedNoteId);
       setSelectedNote(updatedNote);
-      
+
       // Update the notes array
-      setNotes(prevNotes => 
-        prevNotes.map(note => 
-          note.id === selectedNoteId 
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === selectedNoteId
             ? { ...note, title: editingTitle.trim() }
             : note
         )
       );
-      
+
       setIsEditingTitle(false);
     }
   };
@@ -113,6 +113,7 @@ export default function Editor() {
 
   const loadNotes = async () => {
     try {
+      Database.initialize();
       setIsLoading(true);
       const notes = await Database.getNotes();
       setNotes(notes);
@@ -195,7 +196,7 @@ export default function Editor() {
                     </div>
                   ) : (
                     <div className="flex items-center space-x-2">
-                      <h2 
+                      <h2
                         className="text-lg font-medium text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
                         onClick={handleTitleEdit}
                         title="Click to edit title"
@@ -207,13 +208,25 @@ export default function Editor() {
                         className="text-gray-400 hover:text-gray-600 transition-colors"
                         title="Edit title"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
                         </svg>
                       </button>
                     </div>
                   )}
-                  <p className="text-sm text-gray-500 mt-1">Last edited today</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Last edited today
+                  </p>
                 </>
               )}
             </div>
@@ -231,7 +244,7 @@ export default function Editor() {
         </div>
 
         {/* Editor */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-6 overflow-y-auto">
           <div className="max-w-4xl mx-auto">
             {isLoading ? (
               <div className="space-y-4">
@@ -244,7 +257,8 @@ export default function Editor() {
                 <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2"></div>
               </div>
             ) : (
-              value && selectedNoteId !== null && (
+              value &&
+              selectedNoteId !== null && (
                 <WithBaseFullSetup
                   key={`note-${selectedNoteId}`}
                   value={value}
