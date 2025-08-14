@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Note } from "../types/db";
+import { getContentPreview } from "@/utils/editor";
 
 interface SidebarProps {
   onNoteSelect: (noteId: number) => void;
@@ -131,7 +132,7 @@ export default function Sidebar({
                       : "text-gray-600"
                   }`}
                 >
-                  {note.content}
+                  {getContentPreview(JSON.parse(note.content))}
                 </p>
               </div>
             ))}

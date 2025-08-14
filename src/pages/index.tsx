@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import WithBaseFullSetup from "@/components/FullSetupEditor";
 import { Database } from "@/utils/database";
 import { Note } from "@/types/db";
-import { generateContent } from "@/utils/editor";
+import { generateContent, getContentPreview } from "@/utils/editor";
 
 const parseNoteContent = (content: string): YooptaContentValue => {
   if (!content || content.trim() === "") {
@@ -28,6 +28,20 @@ export default function Editor() {
 
   const handleNoteSelect = (noteId: number) => {
     setSelectedNoteId(noteId);
+
+    const selectedNote = notes.find((note) => note.id === noteId);
+    if (selectedNote) {
+      setSelectedNote(selectedNote);
+
+      if (selectedNote.content) {
+        const parsedContent = parseNoteContent(selectedNote.content);
+        setValue(parsedContent);
+        console.log(getContentPreview(parsedContent));
+      } else {
+        setValue({});
+      }
+    }
+
     console.log("Selected note:", noteId);
   };
 
