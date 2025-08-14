@@ -46,6 +46,7 @@ export default function Editor() {
   };
 
   const handleSave = () => {
+    console.log(value)
     if (selectedNote && selectedNoteId !== null) {
       Database.updateNote(
         {
@@ -146,6 +147,15 @@ export default function Editor() {
   useEffect(() => {
     loadNotes();
   }, []);
+
+  useEffect(() => {
+    if (selectedNote && selectedNoteId !== null && value) {
+      const interval = setInterval(() => {
+        handleSave();
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [selectedNote, selectedNoteId, value]);
 
   return (
     <div className="flex h-screen bg-gray-50">
