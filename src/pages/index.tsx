@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import WithBaseFullSetup from "@/components/FullSetupEditor";
 import { Database } from "@/utils/database";
 import { Note } from "@/types/db";
-import { generateContent } from "@/utils/editor";
+import { generateContent, getContentPreview } from "@/utils/editor";
 
 const parseNoteContent = (content: string): YooptaContentValue => {
   if (!content || content.trim() === "") {
@@ -29,24 +29,22 @@ export default function Editor() {
   const [editingTitle, setEditingTitle] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleNoteSelect = (noteId: number) => {
+  const handleNoteSelect = async (noteId: number) => {
+    console.log(noteId);
+    const n = await Database.getNoteById(noteId);
+    console.log(getContentPreview(parseNoteContent(n.content)));
+    setSelectedNote(n);
     setSelectedNoteId(noteId);
-
-    const selectedNote = notes.find((note) => note.id === noteId);
-    if (selectedNote) {
-      setSelectedNote(selectedNote);
-
-      if (selectedNote.content) {
-        const parsedContent = parseNoteContent(selectedNote.content);
-        setValue(parsedContent);
-      } else {
-        setValue({});
-      }
+    
+    if (n?.content) {
+      const parsedContent = parseNoteContent(n.content);
+      setValue(parsedContent);
+    } else {
+      setValue({});
     }
   };
 
   const handleSave = () => {
-    console.log(value)
     if (selectedNote && selectedNoteId !== null) {
       Database.updateNote(
         {
